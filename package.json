@@ -1,0 +1,19 @@
+{
+  "name": "@nactjs/typeorm",
+  "version": "1.0.7",
+  "description": "Typeorm module for nactjs framework",
+  "main": "index.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm run jest"
+  },
+  "repository": "https://github.com/whatmeusername/NactJs-TypeORM",
+  "author": "whatmeusername",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/whatmeusername/NactJs-TypeORM/issues"
+  },
+  "homepage": "https://github.com/whatmeusername/NactJs-TypeORM#readme"
+}
