@@ -1,2 +1,1 @@
-export * from "./module";
-export * from "./lib/decorator";
+export * from "./lib";

@@ -3,6 +3,7 @@ import { isClassInstance } from "../../../../../core/shared";
 import { DataSourceToken, EntityClassOrSchema, TypeOrmRootProviderSettings } from "../interface";
 import { DatabaseStorage } from "./storage";
 import { isDataSourceToken } from "./validator";
+import { DEFAULT_DS_TOKEN } from "../module";
 
 const getDataSourceToken = (DataSource?: DataSourceToken | TypeOrmRootProviderSettings): string => {
 	if (DataSource) {
@@ -11,17 +12,17 @@ const getDataSourceToken = (DataSource?: DataSourceToken | TypeOrmRootProviderSe
 				? DataSource
 				: (DataSource as TypeOrmRootProviderSettings).database ?? DataSource.driver.database;
 		const token = `DATASOURCE_${dbToken?.toLowerCase()}`;
-		if (DatabaseStorage.default.original === token) return token;
+		return token;
 	}
-	return DatabaseStorage.default.prefix;
+	return DEFAULT_DS_TOKEN;
 };
 
 const getRepositoryToken = (Entity: EntityClassOrSchema, DataSource?: DataSourceToken): string | undefined => {
-	let Token = DataSource ? (isDataSourceToken(DataSource) ? DataSource : getDataSourceToken(DataSource)) : null;
-
-	if (!DataSource) {
-		Token = DatabaseStorage.getDataSourceTokenByIndex(0);
-	}
+	const Token = DataSource
+		? isDataSourceToken(DataSource)
+			? DataSource
+			: getDataSourceToken(DataSource)
+		: DEFAULT_DS_TOKEN;
 
 	let entityName = "";
 	if (Entity instanceof EntitySchema) {
@@ -30,12 +31,7 @@ const getRepositoryToken = (Entity: EntityClassOrSchema, DataSource?: DataSource
 		entityName = Entity.name;
 	}
 
-	if (Token) {
-		return `ENTITY_${entityName}_${Token}`;
-	} else {
-		// TODO ---
-		throw new Error();
-	}
+	return `ENTITY_${entityName}_${DEFAULT_DS_TOKEN}`;
 };
 
 export { getDataSourceToken, getRepositoryToken };

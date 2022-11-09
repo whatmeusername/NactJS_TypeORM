@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { DEFAULT_DS_TOKEN } from "../../module";
+import { DEFAULT_DS_TOKEN } from "../module";
 import { DataSourceToken, EntityClassOrSchema } from "../interface";
 import { getDataSourceToken } from "./tokens";
 import { isDataSourceToken } from "./validator";

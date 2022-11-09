@@ -5,12 +5,12 @@ import type {
 	NactRootModuleSettings,
 	NactCustomProvider,
 	NactCustomProviderSettings,
-} from "../../../core/module/index";
-import { createProvider } from "../../../core/module";
+} from "../../../../core/module/index";
+import { createProvider } from "../../../../core/module";
 
-import { getNactLogger } from "../../../core/nact-logger";
-import { EntityClassOrSchema, TypeOrmRootProviderSettings } from "./lib/interface";
-import { DatabaseStorage, getDataSourceToken, getRepositoryToken } from "./lib/utils";
+import { getNactLogger } from "../../../../core/nact-logger";
+import { EntityClassOrSchema, TypeOrmRootProviderSettings } from "./interface";
+import { DatabaseStorage, getDataSourceToken, getRepositoryToken } from "./utils";
 
 const logger = getNactLogger();
 
@@ -62,19 +62,17 @@ class TypeORMModule {
 			}
 		}
 		if (!dataSource.isInitialized) {
-			await deferConnection(() => {
-				dataSource.initialize();
-			});
+			await dataSource.initialize();
 		}
 		return dataSource;
 	};
 
 	protected static getDataSourceProvider(options: TypeOrmRootProviderSettings): NactCustomProvider {
-		const providerToken = getDataSourceToken(options);
+		const providerToken = Object.keys(this.options).length > 1 ? getDataSourceToken(options) : DEFAULT_DS_TOKEN;
 		const settings: NactCustomProviderSettings = { providerName: providerToken };
 
-		settings.useFactory = () => {
-			const DataSource = this.initializeDataSource(options);
+		settings.useFactory = async () => {
+			const DataSource = await this.initializeDataSource(options);
 			return DataSource;
 		};
 
@@ -118,8 +116,6 @@ class TypeORMModule {
 		}
 		return providers;
 	}
-
-	doThings() {}
 }
 
 export { TypeORMModule, DEFAULT_DS_TOKEN };
